@@ -1,0 +1,22 @@
+{
+  "name": "mock-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "db:create": "node scripts/creation.js",
+    "dev": "npm run db:create && nodemon index.js",
+    "start": "npm run db:create node index.js",
+    "docker:up": "docker-compose up",
+    "docker:down": "docker-compose down"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12",
+    "slonik": "^24.1.0"
+  }
+}
