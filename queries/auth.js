@@ -16,11 +16,11 @@ const register = (db) => async ({
       INSERT INTO users (
         email, name, surname,
         address, username, profile_pic,
-        bio, hash, token
+        bio, hash
       ) VALUES (
         ${email}, ${name}, ${surname},
         ${address}, ${username}, ${profilePic},
-        ${bio}, ${hash}, ${token}
+        ${bio}, ${hash}
       )
     `)
   } catch (error) {
@@ -34,28 +34,39 @@ const register = (db) => async ({
 
 const login = (db) => async ({
   email,
+  createConfirmToken,
   compareFn,
 }) => {
   try {
-    const user = await db.maybeOne(sql`
-      SELECT hash, token
-      FROM users
+    return await db.transaction(async tx => {
+      const user = await tx.maybeOne(sql`
+        SELECT hash, token
+        FROM users
+        WHERE email LIKE ${email}
+      `)
+
+      if (!user) return {
+        error: true,
+        message: 'Invalid credentials',
+      }
+
+      const passwordValid = await compareFn(user.hash)
+
+      if (!passwordValid) return {
+        error: true,
+        message: 'Invalid credentials',
+      }
+
+      const token = createConfirmToken()
+
+      await tx.query(sql`
+      UPDATE users
+      SET token = ${token}
       WHERE email LIKE ${email}
     `)
 
-    if (!user) return {
-      error: true,
-      message: 'Invalid credentials',
-    }
-
-    const passwordValid = await compareFn(user.hash)
-
-    if (!passwordValid) return {
-      error: true,
-      message: 'Invalid credentials',
-    }
-
-    return user.token
+      return token
+    })
   } catch (error) {
     console.info('> error: ', error.originalError.detail)
     return {
@@ -90,8 +101,29 @@ const user = (db) => async ({ accessToken }) => {
   }
 }
 
+const logout = (db) => async ({ accessToken }) => {
+  try {
+    await db.maybeOne(sql`
+      UPDATE users
+      SET token = null
+      WHERE token = ${accessToken}
+    `)
+
+    return {
+      error: false,
+    }
+  } catch (error) {
+    console.info('> error: ', error.originalError.detail)
+    return {
+      error: true,
+      message: error.originalError.detail,
+    }
+  }
+}
+
 module.exports = {
   register,
   login,
   user,
+  logout,
 }

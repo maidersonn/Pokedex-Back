@@ -18,7 +18,7 @@ const create = async () => {
         profile_pic TEXT,
         bio TEXT,
         hash TEXT NOT NULL,
-        token TEXT NOT NULL,
+        token TEXT DEFAULT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT (now() AT TIME ZONE 'UTC'),
         updated_at TIMESTAMP NOT NULL DEFAULT (now() AT TIME ZONE 'UTC')
       )

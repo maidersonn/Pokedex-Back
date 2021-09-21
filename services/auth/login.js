@@ -1,5 +1,5 @@
 const { login } = require('../../queries/auth')
-const { compare } = require('../../helpers/hash')
+const { compare, createConfirmToken } = require('../../helpers/hash')
 
 module.exports = (db) => async (req, res, next) => {
   const { email, password } = req.body
@@ -10,7 +10,7 @@ module.exports = (db) => async (req, res, next) => {
     })
   }
 
-  const result = await login(db)({ ...req.body, compareFn: compare(password) })
+  const result = await login(db)({ ...req.body, createConfirmToken, compareFn: compare(password) })
 
   if (result.error) {
     return next({

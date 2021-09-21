@@ -1,5 +1,5 @@
 const { register } = require('../../queries/auth')
-const { encrypt, createConfirmToken } = require('../../helpers/hash')
+const { encrypt, } = require('../../helpers/hash')
 
 module.exports = (db) => async (req, res, next) => {
   const { password, email, username } = req.body
@@ -11,9 +11,8 @@ module.exports = (db) => async (req, res, next) => {
   }
 
   const hash = await encrypt(password)
-  const token = createConfirmToken()
 
-  const result = await register(db)({ ...req.body, hash, token })
+  const result = await register(db)({ ...req.body, hash })
 
   if (result.error) {
     return next({
