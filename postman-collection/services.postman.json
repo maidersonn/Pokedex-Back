@@ -102,6 +102,36 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "a578864feebc5ca0ba8b8d8b7c6707b834ae3b83f12bb567b4196e85888b0ef924bd2c4754f9e7eee57dee3f7232942918145ab0b8dd2d2f5d2557912299f9ee",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
