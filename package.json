@@ -6,9 +6,10 @@
   "scripts": {
     "db:create": "node scripts/creation.js",
     "dev": "npm run db:create && nodemon index.js",
-    "start": "npm run db:create node index.js",
+    "start": "npm run db:create && node index.js",
     "docker:up": "docker-compose up",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "docker:reset": "npm run docker:down && npm run docker:up"
   },
   "author": "",
   "license": "ISC",
