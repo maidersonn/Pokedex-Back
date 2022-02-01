@@ -1,25 +1,23 @@
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers
-
-  console.info('> authorization: ', authorization)
+  const { authorization } = req.headers;
 
   if (!authorization) {
     return next({
       statusCode: 401,
-      error: new Error('unauthorized')
-    })
+      error: new Error("unauthorized"),
+    });
   }
 
-  const [bearer, token] = authorization.split(' ')
+  const [bearer, token] = authorization.split(" ");
 
-  if (bearer !== 'Bearer' || !token) {
+  if (bearer !== "Bearer" || !token) {
     return next({
       statusCode: 401,
-      error: new Error('unauthorized')
-    })
+      error: new Error("unauthorized"),
+    });
   }
 
-  res.locals.accessToken = token
+  res.locals.accessToken = token;
 
-  next()
-}
+  next();
+};
